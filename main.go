@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"database/sql"
+	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -22,30 +22,30 @@ func main() {
 	}
 
 	fmt.Printf("Testing Transactions\n")
-	tx,err := db.Begin()
+	tx, err := db.Begin()
 	if err != nil {
 		panic(err)
 	}
-	insert1,err := tx.Prepare("insert into user(username, firstname, lastname) values ('John','John','Doe')")
+	insert1, err := tx.Prepare("insert into user(username, firstname, lastname) values ('John','John','Doe')")
 	if err != nil {
-		fmt.Printf("Rollbacking insert1 gets error %v\n",err)
+		fmt.Printf("Rollbacking insert1 gets error %v\n", err)
 		panic(err)
 	}
 	res1, err := insert1.Exec()
 	if err != nil {
-		fmt.Printf("Cannot execute query error :%v\n",err)
+		fmt.Printf("Cannot execute query error :%v\n", err)
 		panic(err)
 	}
 	fmt.Println(res1.RowsAffected())
 
-	insert2,err := tx.Prepare("insert into user(username, firstname, lastname) values ('Steve','Steve','Jobs')")
+	insert2, err := tx.Prepare("insert into user(username, firstname, lastname) values ('Steve','Steve','Jobs')")
 	if err != nil {
-		fmt.Printf("Rollbacking insert1 gets error %v\n",err)
+		fmt.Printf("Rollbacking insert1 gets error %v\n", err)
 		panic(err)
 	}
 	res2, err := insert2.Exec()
 	if err != nil {
-		fmt.Printf("Cannot execute query error :%v\n",err)
+		fmt.Printf("Cannot execute query error :%v\n", err)
 		panic(err)
 	}
 	fmt.Println(res2.RowsAffected())
@@ -53,15 +53,15 @@ func main() {
 	fmt.Printf("Force Rollbacking\n")
 	tx.Rollback()
 
-	rows,err := db.Query("select username, firstname, lastname from user")
+	rows, err := db.Query("select username, firstname, lastname from user")
 	if err != nil {
-		fmt.Printf("Rollbacking insert1 gets error %v\n",err)
+		fmt.Printf("Rollbacking insert1 gets error %v\n", err)
 		panic(err)
 	}
-	var username,firstname,lastname string
+	var username, firstname, lastname string
 	for rows.Next() {
-		err = rows.Scan(&username,&firstname,&lastname)
-		fmt.Printf("username(%s),firstname(%s),lastname(%s)\n",username,firstname,lastname)
+		err = rows.Scan(&username, &firstname, &lastname)
+		fmt.Printf("username(%s),firstname(%s),lastname(%s)\n", username, firstname, lastname)
 	}
 	rows.Close()
 
